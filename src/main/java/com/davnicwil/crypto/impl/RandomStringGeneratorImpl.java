@@ -1,10 +1,14 @@
 package com.davnicwil.crypto.impl;
 
 import com.davnicwil.crypto.RandomStringGenerator;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import java.security.SecureRandom;
 import java.util.Random;
 
+@Singleton
 public class RandomStringGeneratorImpl implements RandomStringGenerator {
 
     private static final char[] CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456879".toCharArray();
@@ -14,7 +18,8 @@ public class RandomStringGeneratorImpl implements RandomStringGenerator {
     private SecureRandom sr;
     private int calls;
 
-    public RandomStringGeneratorImpl(Integer length) {
+    @Inject
+    public RandomStringGeneratorImpl(@Named("tokenLength") Integer length) {
         this.length = length;
         sr = new SecureRandom();
     }
