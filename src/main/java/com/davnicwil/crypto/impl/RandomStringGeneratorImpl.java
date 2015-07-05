@@ -14,17 +14,15 @@ public class RandomStringGeneratorImpl implements RandomStringGenerator {
     private static final char[] CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456879".toCharArray();
     private static final int CHARS_LENGTH = CHARS.length;
 
-    private int length;
     private SecureRandom sr;
     private int calls;
 
     @Inject
-    public RandomStringGeneratorImpl(@Named("tokenLength") Integer length) {
-        this.length = length;
+    public RandomStringGeneratorImpl() {
         sr = new SecureRandom();
     }
 
-    public String generate() {
+    public String generate(Integer length) {
         Random rand = new Random(generateUnguessableSeed());
         char[] chars = new char[length];
         for(int i = 0; i < length; i++) chars[i] = getRandomChar(rand);

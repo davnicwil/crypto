@@ -48,35 +48,35 @@ public abstract class RandomStringGeneratorUTestBase {
     public void performanceTest() {
         int length = 128;
         int n = 1000000;
-        RandomStringGenerator testObj = buildTestImpl(length);
+        RandomStringGenerator testObj = buildTestImpl();
         long start = System.currentTimeMillis();
-        for(int i = 0; i < n; i++) { testObj.generate(); }
+        for(int i = 0; i < n; i++) { testObj.generate(length); }
         long finish = System.currentTimeMillis();
         System.out.println(testImplName + ".generate() generated " + n + " Strings of length " + length + " in " + (finish-start) + " milliseconds");
     }
 
     private void itShouldGenerateStringsOfTheSpecifiedLength(int length) {
-        RandomStringGenerator testObj = buildTestImpl(length);
-        String result = testObj.generate();
+        RandomStringGenerator testObj = buildTestImpl();
+        String result = testObj.generate(length);
         String failureMessage = String.format(INCORRECT_LENGTH_FAILURE, testImplName, result, result.length(), length);
         assertEquals(failureMessage, length, result.length());
 
     }
 
     private void itShouldGenerateSufficientlyRandomStrings(int length) {
-        RandomStringGenerator testObj = buildTestImpl(length);
+        RandomStringGenerator testObj = buildTestImpl();
         Set<String> nRandomStrings = IntStream
                 .range(0, generatedSampleSizeAtEachLength)
                 .boxed()
-                .map(i -> testObj.generate())
+                .map(i -> testObj.generate(length))
                 .collect(Collectors.toSet());
         String failureMessage = String.format(NOT_RANDOM_ENOUGH_FAILURE, testImplName, generatedSampleSizeAtEachLength, length, nRandomStrings.size());
         assertEquals(failureMessage, generatedSampleSizeAtEachLength, nRandomStrings.size());
     }
 
-    private RandomStringGenerator buildTestImpl(Integer length) {
+    private RandomStringGenerator buildTestImpl() {
         try {
-            return testImpl.getDeclaredConstructor(Integer.class).newInstance(length);
+            return testImpl.newInstance();
         } catch (Exception e) {
             fail("Could not instantiate your implementation of " + RandomStringGenerator.class.getName() + ": " + testImpl.getClass().getName());
             throw new RuntimeException("test failed");
